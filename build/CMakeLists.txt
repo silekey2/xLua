@@ -34,7 +34,12 @@ find_path(XLUA_PROJECT_DIR NAMES SConstruct
 MARK_AS_ADVANCED(XLUA_PROJECT_DIR)
 
  #begin lua-rapidjson
- set (RAPIDJSON_SRC lua-rapidjson/src/rapidjson.cpp)
+ set (RAPIDJSON_SRC 
+	 lua-rapidjson/source/rapidjson.cpp
+	 lua-rapidjson/source/Document.cpp
+	 lua-rapidjson/source/Schema.cpp
+	 lua-rapidjson/source/values.cpp
+ )
  set_property(
      SOURCE ${RAPIDJSON_SRC}
      APPEND
@@ -44,6 +49,35 @@ MARK_AS_ADVANCED(XLUA_PROJECT_DIR)
  list(APPEND THIRDPART_INC  lua-rapidjson/include)
  set (THIRDPART_SRC ${THIRDPART_SRC} ${RAPIDJSON_SRC})
  #end lua-rapidjson
+ 
+ #begin pbc
+set (PBC_SRC 
+    pbc/src/alloc.c
+    pbc/src/array.c
+    pbc/src/array.c
+    pbc/src/bootstrap.c
+    pbc/src/context.c
+    pbc/src/decode.c
+    pbc/src/map.c
+    pbc/src/pattern.c
+    pbc/src/proto.c
+    pbc/src/register.c
+    pbc/src/rmessage.c
+    pbc/src/stringpool.c
+    pbc/src/varint.c
+    pbc/src/wmessage.c
+)
+list(APPEND PBC_SRC pbc pbc/binding/lua53/pbc-lua53.c)
+
+set_property(
+	SOURCE ${PBC_SRC}
+	APPEND
+	PROPERTY COMPILE_DEFINITIONS
+	LUA_LIB
+)
+list(APPEND THIRDPART_INC pbc pbc/src)
+set (THIRDPART_SRC ${THIRDPART_SRC} ${PBC_SRC})
+#end pbc
 
 if (NOT LUA_VERSION)
     set(LUA_VERSION "5.3.5")
